@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 
 // saying node that we are using .env
-const test = require("dotenv");
-const { name } = require("ejs");
-test.config();
+require("dotenv").config();
+
+// saying node that we are using index.js
+require("./model/index.js");
 
 // saying node that we are using ejs
 app.set("view engine", "ejs");
