@@ -26,8 +26,37 @@ app.use(express.urlencoded({ extended: true })); //contentType= application/x-ww
 
 app.get("/", async (req, res) => {
   const allBlogs = await blogs.findAll();
-  console.log(allBlogs);
+  // console.log(allBlogs);
   res.render("allBlogs.ejs", { blogs: allBlogs });
+});
+
+// get single blog
+
+app.get("/blogs/:id", async (req, res) => {
+  const id = req.params.id;
+
+  // aako id ko data blogs table bata fetch/find garnu paryo
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  // we can do the same above thing by this method too
+  //  const blog  = await blogs.findByPk(id)
+
+  res.render("singleBlog", { blog });
+});
+
+// to delete
+app.get("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+  // aako id ko data(row) chae blogs vanney table bata delete garnu paryo
+  await blogs.destroy({
+    where: {
+      id: id,
+    },
+  });
+  res.redirect("/addBlog");
 });
 
 app.get("/addBlog", (req, res) => {
@@ -51,15 +80,15 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
     description,
     imageUrl: req.file.filename,
   });
-  res.send("Blogs stored successfully");
+  res.redirect("/");
   //res.render("addBlog.ejs");
 });
 
 app.use(express.static("./uploads"));
 
 //taking variable from .env
-console.log(process.env.name);
-console.log(process.env.PORT);
+// console.log(process.env.name);
+// console.log(process.env.PORT);
 
 const PORT = process.env.PORT;
 

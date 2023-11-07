@@ -9,6 +9,8 @@
       }
 
       .navbar {
+        position: sticky;
+        top: 0;
         background-color: #333;
         color: #fff;
         padding: 10px;
@@ -33,7 +35,7 @@
       }
 
       .blog-image {
-        width: 100%;
+        width: 10%;
         height: auto;
       }
 
@@ -56,17 +58,16 @@
         color: #fff;
         text-align: center;
         padding: 10px;
-        position: absolute;
-        bottom: 0;
         width: 100%;
       }
     </style>
   </head>
   <body>
     <div class="navbar">
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
+      <a href="/">Home</a>
+      <a href="/">About</a>
+      <a href="/">Contact</a>
+      <a href="/addBlog">Add Blog</a>
     </div>
 
     <div class="container">
@@ -96,6 +97,7 @@
         <div class="blog-title"><%-blog.title %></div>
         <div class="blog-subtitle"><%-blog.subTitle %></div>
         <div class="blog-description"><%-blog.description %></div>
+        <a href="/blogs/<%-blog.id%>">see more</a>
       </div>
       <% }) %>
 

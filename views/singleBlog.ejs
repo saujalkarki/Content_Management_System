@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .navbar {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+      }
+
+      .navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin: 10px;
+      }
+
+      .container {
+        margin: 20px;
+      }
+
+      .blog-card {
+        border: 1px solid #ccc;
+        margin: 10px;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .blog-image {
+        width: 10%;
+        height: 250px;
+      }
+
+      .blog-title {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .blog-subtitle {
+        font-size: 18px;
+        color: #888;
+      }
+
+      .blog-description {
+        margin-top: 10px;
+      }
+
+      .footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="/">Home</a>
+      <a href="/">About</a>
+      <a href="/">Contact</a>
+    </div>
+
+    <!-- <div class="container">
+      <div class="blog-card">
+        <img class="blog-image" src="<%-blog[0].imageUrl %>" alt="Blog Image" />
+        <div class="blog-title"><%- blog[0].title %></div>
+        <div class="blog-subtitle"><%- blog[0].subTitle %></div>
+        <div class="blog-description"><%-blog[0].description %></div>
+        <button><a href="/delete/<%- blog[0].id %>">Delete Blog</a></button>
+      </div> -->
+      
+      <div class="container">
+        <% if (blog && blog.length > 0) { %>
+          <div class="blog-card">
+            <img class="blog-image" src="<%- blog[0].imageUrl || '' %>" alt="Blog Image" />
+            <div class="blog-title"><%- blog[0].title || '' %></div>
+            <div class="blog-subtitle"><%- blog[0].subTitle || '' %></div>
+            <div class="blog-description"><%- blog[0].description || '' %></div>
+            <button><a href="/delete/<%- blog[0].id %>">Delete Blog</a></button>
+          </div>
+        <% } else { %>
+          <p>No blog selected.</p>
+        <% } %>
+      </div>
+
+      <!-- Add more blog cards here as needed -->
+    </div>
+
+    <div class="footer">&copy; 2023 102TCMS</div>
+  </body>
+</html>
