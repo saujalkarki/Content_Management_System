@@ -1,5 +1,14 @@
 const express = require("express");
 const { blogs } = require("./model/index.js");
+
+// requiring multerConfig
+
+// const multer = require("./middleware/multerConfig.js").multer;
+// const storage = require("./middleware/multerConfig.js").storage;
+// This above code can also be written as below:
+const { multer, storage } = require("./middleware/multerConfig.js");
+const upload = multer({ storage: storage });
+
 const app = express();
 
 // saying node that we are using .env
@@ -12,8 +21,8 @@ require("./model/index.js");
 app.set("view engine", "ejs");
 
 // telling nodejs to accept the incoming data (parsing data)
-// app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); //contentType= application/json handle
+app.use(express.urlencoded({ extended: true })); //contentType= application/x-www-form-urlencoded
 
 app.get("/", (req, res) => {
   res.render("allBlogs.ejs");
@@ -24,13 +33,24 @@ app.get("/addBlog", (req, res) => {
 });
 
 // api for handling form data's
-app.post("/addBlog", async (req, res) => {
+app.post("/addBlog", upload.single("image"), async (req, res) => {
+  // const title = req.body.title;
+  // const subTitle = req.body.subtitle;
+  // The above code can be done by destructuring method too:
+  const { title, subtitle, description } = req.body;
+
   await blogs.create({
-    title: req.body.title,
-    subTitle: req.body.subtitle,
-    description: req.body.description,
+    // all the below 3 approaches are same
+    // title,
+    // subTitle: subTitle,
+    // description: req.body.description,
+    title,
+    subTitle: subtitle,
+    description,
+    imageUrl: req.file.filename,
   });
   res.send("Blogs stored successfully");
+  //res.render("addBlog.ejs");
 });
 
 //taking variable from .env

@@ -35,6 +35,7 @@ db.blogs = require("./blogModel.js")(sequelize, DataTypes);
 
 db.users = require("./userModel.js")(sequelize, DataTypes);
 
+// if the force is setted to false then all the previous data will be deleted after adding
 db.sequelize.sync({ force: false }).then(() => {
   console.log("yes re-sync done");
 });
