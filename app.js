@@ -24,8 +24,10 @@ app.set("view engine", "ejs");
 app.use(express.json()); //contentType= application/json handle
 app.use(express.urlencoded({ extended: true })); //contentType= application/x-www-form-urlencoded
 
-app.get("/", (req, res) => {
-  res.render("allBlogs.ejs");
+app.get("/", async (req, res) => {
+  const allBlogs = await blogs.findAll();
+  console.log(allBlogs);
+  res.render("allBlogs.ejs", { blogs: allBlogs });
 });
 
 app.get("/addBlog", (req, res) => {
@@ -52,6 +54,8 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
   res.send("Blogs stored successfully");
   //res.render("addBlog.ejs");
 });
+
+app.use(express.static("./uploads"));
 
 //taking variable from .env
 console.log(process.env.name);
