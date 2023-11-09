@@ -1,5 +1,6 @@
 const express = require("express");
 const { blogs } = require("./model/index.js");
+const fs = require("fs");
 
 // requiring multerConfig
 
@@ -78,10 +79,55 @@ app.post("/addBlog", upload.single("image"), async (req, res) => {
     title,
     subTitle: subtitle,
     description,
-    imageUrl: req.file.filename,
+    imageUrl: process.env.BackEnd_URL + req.file.filename,
   });
   res.redirect("/");
   //res.render("addBlog.ejs");
+});
+
+// edit
+app.get("/edit/:id", async (req, res) => {
+  const id = req.params.id;
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  res.render("editblog.ejs", { blog: blog });
+});
+
+// edit form bata aako kura handle
+// app.post("/edit/:id", (req, res) => {
+// console.log(req.body);
+// });
+app.post("/edit/:id", upload.single("image"), async (req, res) => {
+  const id = req.params.id;
+  // old data
+  const oldData = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  const oldFileName = oldData[0].imageUrl;
+  const lengthToCut = "http://localhost:3000/".length;
+  const oldFileNameAfterCut = oldFileName.slice(lengthToCut);
+
+  if (fileName) {
+    fs.unlink("./uploads" + oldFileNameAfterCut, (err) => {
+      if (err) {
+        console.log("Error detected while deleting");
+      } else {
+        console.log("successfully cleared");
+      }
+    });
+  }
+
+  await blogs.update({
+    title,
+    subTitle,
+    description,
+    image: fileName ? process.env.BackEnd_URL + fileName : fileName,
+  });
 });
 
 app.use(express.static("./uploads"));
