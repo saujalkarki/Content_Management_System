@@ -51,6 +51,22 @@ app.get("/blogs/:id", async (req, res) => {
 // to delete
 app.get("/delete/:id", async (req, res) => {
   const id = req.params.id;
+  const blog = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  const fileName = blog[0].imageUrl;
+  const lengthToCut = "http://localhost:3000/".length;
+  const fileNameAfterCut = fileName.slice(lengthToCut);
+
+  fs.unlink("./uploads/" + fileNameAfterCut, function (err) {
+    if (err) {
+      console.log("error happened while deleting");
+    } else {
+      console.log("sucessfully deleted");
+    }
+  });
   // aako id ko data(row) chae blogs vanney table bata delete garnu paryo
   await blogs.destroy({
     where: {
@@ -102,6 +118,13 @@ app.get("/edit/:id", async (req, res) => {
 // });
 app.post("/edit/:id", upload.single("image"), async (req, res) => {
   const id = req.params.id;
+  const { title, subtitle, description } = req.body;
+  let fileName;
+
+  if (req.file) {
+    fileName = req.file.filename;
+  }
+
   // old data
   const oldData = await blogs.findAll({
     where: {
@@ -113,7 +136,7 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
   const oldFileNameAfterCut = oldFileName.slice(lengthToCut);
 
   if (fileName) {
-    fs.unlink("./uploads" + oldFileNameAfterCut, (err) => {
+    fs.unlink("./uploads/" + oldFileNameAfterCut, (err) => {
       if (err) {
         console.log("Error detected while deleting");
       } else {
@@ -122,12 +145,24 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
     });
   }
 
-  await blogs.update({
-    title,
-    subTitle,
-    description,
-    image: fileName ? process.env.BackEnd_URL + fileName : fileName,
-  });
+  // console.log(fileName);
+  // return;
+  await blogs.update(
+    {
+      title,
+      subTitle: subtitle,
+      description,
+      imageUrl: fileName ? process.env.BackEnd_URL + fileName : fileName,
+    },
+    {
+      where: {
+        id: id,
+      },
+    }
+  );
+
+  // res.redirect("/");
+  res.redirect("/blogs/" + id);
 });
 
 app.use(express.static("./uploads"));
