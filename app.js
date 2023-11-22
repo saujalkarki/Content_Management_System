@@ -1,5 +1,6 @@
 const express = require("express");
-const { blogs } = require("./model/index.js");
+const { blogs, users } = require("./model/index.js");
+const bcrypt = require("bcrypt");
 const fs = require("fs");
 
 // requiring multerConfig
@@ -163,6 +164,25 @@ app.post("/edit/:id", upload.single("image"), async (req, res) => {
 
   // res.redirect("/");
   res.redirect("/blogs/" + id);
+});
+
+// register
+app.get("/register", (req, res) => {
+  res.render("register.ejs");
+});
+
+app.post("/register", async (req, res) => {
+  const { userName, email, password, confirmPassword } = req.body;
+
+  console.log(userName, email, password, confirmPassword);
+  await users.create({
+    userName,
+    email,
+    password: bcrypt.hashSync(password, 10),
+    confirmPassword: bcrypt.hashSync(confirmPassword, 10),
+  });
+
+  res.redirect("/");
 });
 
 app.use(express.static("./uploads"));
