@@ -64,16 +64,8 @@
   <body>
     <%- include("navBar.ejs")%>
 
-    <form action="/register" method="post">
-      <h2>Register User</h2>
-      <label for="userName">Username:</label>
-      <input
-        type="text"
-        id="userName"
-        name="userName"
-        placeholder="Enter the username"
-        required
-      />
+    <form action="/login" method="post">
+      <h2>Login</h2>
 
       <label for="email">Email:</label>
       <input
@@ -93,16 +85,7 @@
         required
       />
 
-      <label for="confirmPassword">Confirm Password:</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        name="confirmPassword"
-        placeholder="Confirm new password"
-        required
-      />
-
-      <button type="submit" value="register">Register</button>
+      <button type="submit" value="login">Login</button>
     </form>
 
     <%-include("footer.ejs")%>

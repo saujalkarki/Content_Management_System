@@ -185,6 +185,35 @@ app.post("/register", async (req, res) => {
   res.redirect("/");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+app.post("/login", async (req, res) => {
+  // access email and password
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.send("Please provide email and password");
+  }
+  // check if email exist or not
+  const user = await users.findAll({
+    where: {
+      email: email,
+    },
+  });
+  if (user.length == 0) {
+    res.send("User doesn't exist with that email");
+  } else {
+    //check password matches or not
+    const isPasswordMatched = bcrypt.compareSync(password, user[0].password);
+    if (isPasswordMatched) {
+      res.send("loggedIn Successfully");
+    } else {
+      res.send("Invalid password");
+    }
+  }
+});
+
 app.use(express.static("./uploads"));
 
 //taking variable from .env
